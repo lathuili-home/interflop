@@ -42,7 +42,7 @@
 
 #include "../../include/interflop.h"
 #include "../../include/float_const.h"
-#include "tinymt64.h"
+#include "../mca-mpfr/tinymt64.h"
 
 /* define the available bitmask modes */
 #define BITMASK_MODE_ZERO 0
@@ -309,6 +309,36 @@ struct interflop_backend_interface_t interflop_init(void ** context) {
     _interflop_sub_double,
     _interflop_mul_double,
     _interflop_div_double
+
+    NULL, //void (*interflop_add_floatx2)(floatx2, floatx2, floatx2*, void*);
+    NULL, //void (*interflop_sub_floatx2)(floatx2, floatx2, floatx2*, void*);
+    NULL, //void (*interflop_mul_floatx2)(floatx2, floatx2, floatx2*, void*);
+    NULL, //void (*interflop_div_floatx2)(floatx2, floatx2, floatx2*, void*);
+
+    NULL, //void (*interflop_add_floatx4)(floatx4, floatx4, floatx4*, void*);
+    NULL, //void (*interflop_sub_floatx4)(floatx4, floatx4, floatx4*, void*);
+    NULL, //void (*interflop_mul_floatx4)(floatx4, floatx4, floatx4*, void*);
+    NULL, //void (*interflop_div_floatx4)(floatx4, floatx4, floatx4*, void*);
+
+    NULL, //void (*interflop_add_floatx8)(floatx8, floatx8, floatx8*, void*);
+    NULL, //void (*interflop_sub_floatx8)(floatx8, floatx8, floatx8*, void*);
+    NULL, //void (*interflop_mul_floatx8)(floatx8, floatx8, floatx8*, void*);
+    NULL, //void (*interflop_div_floatx8)(floatx8, floatx8, floatx8*, void*);
+
+    NULL, //void (*interflop_add_doublex2)(doublex2, doublex2, doublex2*, void*);
+    NULL, //void (*interflop_sub_doublex2)(doublex2, doublex2, doublex2*, void*);
+    NULL, //void (*interflop_mul_doublex2)(doublex2, doublex2, doublex2*, void*);
+    NULL, //void (*interflop_div_doublex2)(doublex2, doublex2, doublex2*, void*);
+
+    NULL, //void (*interflop_add_doublex4)(doublex4, doublex4, doublex4*, void*);
+    NULL, //void (*interflop_sub_doublex4)(doublex4, doublex4, doublex4*, void*);
+    NULL, //void (*interflop_mul_doublex4)(doublex4, doublex4, doublex4*, void*);
+    NULL, //void (*interflop_div_doublex4)(doublex4, doublex4, doublex4*, void*);
+
+    NULL,  //void (*interflop_cast_double_to_float)(double, float*, void*);
+
+    NULL, //void (*interflop_madd_float)(float, float, float, float*, void*);
+    NULL  //void (*interflop_madd_double)(double, double, double, double*, void*);
   };
 
   return interflop_backend_bitmask;

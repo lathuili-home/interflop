@@ -28,6 +28,8 @@ AC_CONFIG_FILES([Makefile
 		 backends/Makefile
 		 backends/ieee/Makefile
 		 backends/mca-mpfr/Makefile
+		 backends/bitmask/Makefile
+		 backends/backend-verrou/Makefile
 		 tests/Makefile
                 ])
 AC_OUTPUT

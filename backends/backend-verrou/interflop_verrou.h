@@ -34,6 +34,7 @@
 #define __INTERFLOP_VERROU_H
 
 //#define DEBUG_PRINT_OP
+#define USE_VERROU_LIB_C
 
 #ifdef __cplusplus
 extern "C" {
@@ -80,7 +81,9 @@ extern "C" {
   void verrou_set_debug_print_op(void (*)(int nbArg, const char* name, const double* args, const double* res));
 
   struct interflop_backend_interface_t IFV_FCTNAME(init)(void ** context);
-
+#ifdef USE_VERROU_LIB_C
+  struct interflop_backend_interface_t interflop_init(void ** context);
+#endif
   void IFV_FCTNAME(add_double) (double a, double b, double* res, void* context);    
   void IFV_FCTNAME(add_float)  (float a,  float b,  float*  res, void* context);
   void IFV_FCTNAME(sub_double) (double a, double b, double* res, void* context);
@@ -119,6 +122,13 @@ extern "C" {
   void IFV_FCTNAME(madd_double)(double a, double b, double c, double* res, void* context);
   void IFV_FCTNAME(madd_float) (float a,  float b,  float c,  float*  res, void* context);
 
+#ifdef USE_VERROU_LIB_C
+  void default_libc_tool_panic(const char* msg);
+  void default_libc_print_op(int nbArg, const char* name, const double* args,const double* res);
+  vr_RoundingMode default_libc_read_env();
+  unsigned int default_libc_seed_init();
+  void default_libc_configuration(void** context);
+#endif
   
 #ifdef __cplusplus
 }

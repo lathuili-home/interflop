@@ -313,6 +313,7 @@ void IFV_FCTNAME(madd_float) (float a, float b, float c, float* res, void* conte
 
 
 
+
 struct interflop_backend_interface_t IFV_FCTNAME(init)(void ** context){
   struct interflop_backend_interface_t config;
 
@@ -358,3 +359,89 @@ struct interflop_backend_interface_t IFV_FCTNAME(init)(void ** context){
 
   return config;
 }
+
+
+
+#ifdef USE_VERROU_LIB_C
+
+#include <string.h>
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
+
+void default_libc_tool_panic(const char* msg){
+  printf("Verrou panic : %s ", msg);
+  exit(42);
+}
+void default_libc_print_op(int nbArg, const char* name, const double* args,const double* res){
+  if(nbArg==1){
+    printf("%s : %f => %f\n", name,args[0],*res);
+  }
+  if(nbArg==2){
+    printf("%s : %f, %f => %f\n", name,args[0], args[1],*res);
+  }
+  if(nbArg==3){
+    printf("%s : %f, %f, %f => %f\n", name, args[0], args[1], args[2], *res);
+  }
+}
+
+vr_RoundingMode default_libc_read_env(){
+  //Read the rounding configuration in ROUNDING_MODE env variable
+  char * modeStr = getenv("ROUNDING_MODE");
+  int max_size=10;
+  if (modeStr != NULL) {
+    if (strncmp("nearest", modeStr, max_size) == 0) {
+      return VR_NEAREST;
+    }
+    if (strncmp("upward", modeStr, max_size) == 0) {
+      return VR_UPWARD;
+    }
+    if (strncmp("downward", modeStr, max_size) == 0) {
+      return VR_DOWNWARD;
+    }
+    if (strncmp("zero", modeStr, max_size) == 0) {
+      return VR_ZERO;
+    }
+    if (strncmp("random", modeStr, max_size) == 0) {
+      return VR_RANDOM;
+    }
+    if (strncmp("average", modeStr, max_size) == 0) {
+      return VR_AVERAGE;
+    }
+    if (strncmp("farthest", modeStr, max_size) == 0) {
+      return VR_FARTHEST;
+    }
+    default_libc_tool_panic("unknown ROUNDING_MODE");
+  }
+  return VR_NEAREST;
+}
+
+unsigned int default_libc_seed_init(){
+  // Compute a seed initialisation for the random generator : use time and pid
+  struct timeval now;
+  gettimeofday(&now, NULL);
+  unsigned int pid = getpid();
+  unsigned int seed=(now.tv_usec + pid);
+  return seed;
+}
+
+
+void default_libc_configuration(void** context){
+  vr_RoundingMode mode=default_libc_read_env();
+
+  verrou_set_panic_handler(&default_libc_tool_panic);
+  verrou_set_debug_print_op(&default_libc_print_op);//Use only verrou backend is configured to use it
+
+  verrou_set_seed(default_libc_seed_init());
+
+  IFV_FCTNAME(configure)(mode,*context);
+}
+
+
+struct interflop_backend_interface_t interflop_init(void ** context){
+  default_libc_configuration(context);
+  return IFV_FCTNAME(init)(context);
+};
+
+
+#endif
