@@ -368,6 +368,9 @@ struct interflop_backend_interface_t IFV_FCTNAME(init)(void ** context){
 #include <sys/time.h>
 #include <sys/types.h>
 #include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+
 
 void default_libc_tool_panic(const char* msg){
   printf("Verrou panic : %s ", msg);
